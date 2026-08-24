@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quem Somos - Estação Pleno Campo</title>
+    <style>
+        :root {
+            --bg-color: #fcf9f2;
+            --text-color: #2c3e2d;
+            --primary-green: #4a7c59;
+            --accent-sun: #e9c46a;
+            --accent-terra: #f4a261;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            background-color: var(--primary-green);
+            color: white;
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--accent-sun);
+        }
+        h1 { margin: 0; font-size: 2rem; }
+        
+        /* Estilos do Menu de Navegação */
+        nav {
+            margin-top: 20px;
+        }
+        .nav-menu {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .nav-menu a.active {
+            background-color: var(--accent-sun);
+            color: var(--text-color);
+            border-color: var(--accent-sun);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e5e1;
+            text-align: center;
+        }
+
+        /* Tipografia específica para o Quem Somos */
+        .historia-texto {
+            text-align: left;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        .historia-texto h2 {
+            color: var(--primary-green);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .historia-texto strong {
+            color: var(--primary-green);
+        }
+
+        /* Estilos do Contador */
+        .contador-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #e0e5e1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .contador-numero {
+            font-size: 5rem;
+            font-weight: bold;
+            color: var(--accent-terra);
+            margin: 10px 0;
+        }
+        .contador-legenda {
+            font-size: 1.2rem;
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🌿 Estação Pleno Campo SBCG</h1>
+    <p>Conheça a nossa história e tecnologia</p>
+    
+    <nav>
+        <ul class="nav-menu">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="historico.html">Histórico</a></li>
+            <li><a href="quem-somos.html" class="active">Quem Somos</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="card">
+        <div class="historia-texto">
+            <h2>A Ciência a Favor da Terra</h2>
+            
+            <p>A Pleno Campo nasceu da união direta entre a ciência acadêmica e a realidade prática de quem vive no campo. Nossa jornada começou nos laboratórios da <strong>Universidade Federal de Mato Grosso do Sul (UFMS)</strong>, impulsionada pelo desejo de tornar a irrigação agrícola mais inteligente e sustentável.</p>
+            
+            <p>O grande pilar tecnológico do nosso sistema de monitoramento é fruto de anos de estudos aprofundados, com destaque especial para as metodologias e pesquisas rigorosas conduzidas pelo <strong>Grupo de Pesquisa em Física da Atmosfera (GPFA)</strong> da UFMS.</p>
+            
+            <p>Nós pegamos a complexidade dos dados meteorológicos e atmosféricos e a transformamos em uma ferramenta simples e acessível. Nosso objetivo é claro: ajudar o produtor rural a tomar a melhor decisão, economizando água, otimizando o tempo da bomba e respeitando o ciclo da natureza.</p>
+        </div>
+
+        <div class="contador-section">
+            <div class="contador-numero" id="contador-fazendas">0</div>
+            <div class="contador-legenda">Fazendas já atendidas pela nossa tecnologia</div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    © 2026 PlenoCampo. Feito no Brasil.
+</footer>
+
+<script>
+    // Função para animar o contador
+    function animarContador(id, start, end, duration) {
+        const obj = document.getElementById(id);
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            
+            // Calcula o número atual baseado no progresso da animação
+            obj.innerHTML = Math.floor(progress * (end - start) + start);
+            
+            // Continua a animação se não tiver chegado ao fim
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                obj.innerHTML = end; // Garante que o valor final seja exato
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    // Dispara a animação quando a página termina de carregar
+    window.onload = () => {
+        // Vai de 0 a 6 em 1.5 segundos (1500 ms)
+        animarContador("contador-fazendas", 0, 6, 1500);
+    };
+</script>
+</body>
+</html>
