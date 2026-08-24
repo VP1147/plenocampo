@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Estação Pleno Campo - SBCG</title>
     <style>
         :root {
             --bg-color: #fcf9f2;
@@ -34,6 +34,37 @@
             border-bottom: 5px solid var(--accent-sun);
         }
         h1 { margin: 0; font-size: 2rem; }
+        
+        /* Estilos do Menu de Navegação */
+        nav {
+            margin-top: 20px;
+        }
+        .nav-menu {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .nav-menu a.active {
+            background-color: var(--accent-sun);
+            color: var(--text-color);
+            border-color: var(--accent-sun);
+        }
+
         .container {
             width: 90%;
             max-width: 1000px;
@@ -127,6 +158,15 @@
 <header>
     <h1>🌿 Estação Pleno Campo SBCG (Campo Grande)</h1>
     <p>Monitoramento e Cálculo de Evapotranspiração da Cultura (ETc)</p>
+    
+    <!-- Novo Menu de Navegação -->
+    <nav>
+        <ul class="nav-menu">
+            <li><a href="index.html" class="active">Início</a></li>
+            <li><a href="historico.html">Histórico</a></li>
+            <li><a href="quem-somos.html">Quem Somos</a></li>
+        </ul>
+    </nav>
 </header>
 
 <div class="container">
