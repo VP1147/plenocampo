@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico - Estação Pleno Campo</title>
+    <style>
+        :root {
+            --bg-color: #fcf9f2;
+            --text-color: #2c3e2d;
+            --primary-green: #4a7c59;
+            --accent-sun: #e9c46a;
+            --accent-terra: #f4a261;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            background-color: var(--primary-green);
+            color: white;
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--accent-sun);
+        }
+        h1 { margin: 0; font-size: 2rem; }
+        
+        /* Estilos do Menu de Navegação */
+        nav {
+            margin-top: 20px;
+        }
+        .nav-menu {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .nav-menu a.active {
+            background-color: var(--accent-sun);
+            color: var(--text-color);
+            border-color: var(--accent-sun);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e5e1;
+            text-align: center;
+        }
+
+        /* Estilo do Menu de Cultura */
+        .seletor-cultura {
+            margin: 0 auto 20px auto;
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed var(--primary-green);
+            width: 100%;
+            max-width: 400px;
+        }
+        .seletor-cultura label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-green);
+            font-size: 1.1rem;
+            background-color: white;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        /* Estilos da Tabela de Histórico */
+        .tabela-historico {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .tabela-historico th, .tabela-historico td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        .tabela-historico th {
+            background-color: var(--primary-green);
+            color: white;
+            font-weight: 600;
+        }
+        .tabela-historico th:first-child { border-top-left-radius: 8px; }
+        .tabela-historico th:last-child { border-top-right-radius: 8px; }
+        .tabela-historico tr:hover {
+            background-color: #f9fbf9;
+        }
+        .destaque-tabela {
+            color: var(--accent-terra);
+            font-weight: bold;
+        }
+
+        #loading { text-align: center; font-size: 1.2rem; margin: 20px; }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🌿 Estação Pleno Campo SBCG (Campo Grande)</h1>
+    <p>Histórico Diário de Consumo Hídrico</p>
+    
+    <nav>
+        <ul class="nav-menu">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="historico.html" class="active">Histórico</a></li>
+            <li><a href="quem-somos.html">Quem Somos</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h3>Histórico de Evapotranspiração (Últimos 7 dias)</h3>
+        
+        <div class="seletor-cultura">
+            <label for="crop-select">Analisar consumo para:</label>
+            <select id="crop-select" onchange="atualizarTabela()">
+                <option value="1.00">Grama Padrão / Solo Nu (Kc = 1.00)</option>
+                <option value="1.15" selected>Soja (Kc = 1.15)</option>
+                <option value="1.20">Milho (Kc = 1.20)</option>
+                <option value="1.05">Feijão (Kc = 1.05)</option>
+                <option value="0.90">Trigo (Kc = 0.90)</option>
+                <option value="1.10">Cana-de-açúcar (Kc = 1.10)</option>
+            </select>
+        </div>
+
+        <div id="loading">Buscando registros na estação...</div>
+
+        <div style="overflow-x: auto;">
+            <table class="tabela-historico" id="tabela-dados" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Temp. Média (°C)</th>
+                        <th>Radiação (MJ/m²)</th>
+                        <th>ET₀ Base (mm/dia)</th>
+                        <th>ETc Cultura (mm/dia)</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-corpo">
+                    <!-- Linhas injetadas pelo JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer>
+    Dados: Open-Meteo API. 
+    © 2026 PlenoCampo. Feito no Brasil.
+</footer>
+
+<script>
+    const lat = -20.4687;
+    const lon = -54.6725;
+    const elevacao = 532; 
+    let dadosHistoricos = []; // Array para guardar os cálculos dos dias
+
+    async function fetchHistorico() {
+        try {
+            // Chamada da API para dados diários (passados)
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_mean,shortwave_radiation_sum&past_days=7&forecast_days=1&timezone=America%2FSao_Paulo`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            processarHistorico(data.daily);
+        } catch (error) {
+            console.error("Erro ao buscar histórico: ", error);
+            document.getElementById('loading').innerText = "Falha ao carregar o histórico.";
+        }
+    }
+
+    function calcularHansenDiario(temperatura, radiacaoMJ, elevacao) {
+        // Como a radiação diária já vem em MJ/m², removemos a conversão de Watts do código original
+        if (radiacaoMJ <= 0 || !radiacaoMJ) return 0.00;
+        
+        const lambda = 2.501 - (0.002361 * temperatura);
+        const P = 101.3 * Math.pow(((293 - 0.0065 * elevacao) / 293), 5.26);
+        const gamma = 0.00163 * (P / lambda);
+        const expTerm = Math.exp((17.27 * temperatura) / (temperatura + 237.3));
+        const delta = (4098 * 0.6108 * expTerm) / Math.pow((temperatura + 237.3), 2);
+        
+        let eto = 0.7 * (delta / (delta + gamma)) * (radiacaoMJ / lambda);
+        return eto > 0 ? parseFloat(eto.toFixed(2)) : 0.00;
+    }
+
+    function formatarData(dataString) {
+        // Transforma "2026-08-23" em "23/08"
+        const partes = dataString.split('-');
+        return `${partes[2]}/${partes[1]}`;
+    }
+
+    function processarHistorico(dailyData) {
+        dadosHistoricos = []; // Limpa o array
+
+        // Pula o último dia do array se for a previsão do amanhã (forecast_days=1)
+        const qtdDias = dailyData.time.length - 1; 
+
+        for (let i = 0; i < qtdDias; i++) {
+            const dataStr = dailyData.time[i];
+            const tempMedia = dailyData.temperature_2m_mean[i];
+            const radTotal = dailyData.shortwave_radiation_sum[i];
+            
+            const eto = calcularHansenDiario(tempMedia, radTotal, elevacao);
+            
+            dadosHistoricos.push({
+                data: formatarData(dataStr),
+                temp: tempMedia,
+                rad: radTotal,
+                eto: eto
+            });
+        }
+
+        // Inverte o array para mostrar o dia mais recente no topo
+        dadosHistoricos.reverse();
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('tabela-dados').style.display = 'table';
+        
+        atualizarTabela();
+    }
+
+    function atualizarTabela() {
+        const kc = parseFloat(document.getElementById('crop-select').value);
+        const tbody = document.getElementById('tabela-corpo');
+        tbody.innerHTML = ""; // Limpa a tabela
+
+        dadosHistoricos.forEach(dia => {
+            const etc = (dia.eto * kc).toFixed(2);
+            
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${dia.data}</strong></td>
+                <td>${dia.temp}</td>
+                <td>${dia.rad.toFixed(1)}</td>
+                <td>${dia.eto}</td>
+                <td class="destaque-tabela">${etc}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Inicializa a busca
+    fetchHistorico();
+</script>
+</body>
+</html>
