@@ -35,122 +35,65 @@
         }
         h1 { margin: 0; font-size: 2rem; }
         
-        /* Estilos do Menu de Navegação */
-        nav {
-            margin-top: 20px;
-        }
+        nav { margin-top: 20px; }
         .nav-menu {
             list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
+            padding: 0; margin: 0;
+            display: flex; justify-content: center; gap: 15px;
         }
         .nav-menu a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 20px;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            color: white; text-decoration: none; font-weight: 600;
+            padding: 8px 20px; border-radius: 20px;
+            transition: all 0.3s ease; border: 2px solid transparent;
         }
-        .nav-menu a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
+        .nav-menu a:hover { background-color: rgba(255, 255, 255, 0.2); }
         .nav-menu a.active {
-            background-color: var(--accent-sun);
-            color: var(--text-color);
+            background-color: var(--accent-sun); color: var(--text-color);
             border-color: var(--accent-sun);
         }
 
         .container {
-            width: 90%;
-            max-width: 1000px;
-            margin: 30px auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            width: 90%; max-width: 1000px; margin: 30px auto;
+            display: flex; flex-direction: column; gap: 20px;
         }
         .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;
         }
         .card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-            border: 1px solid #e0e5e1;
-            text-align: center;
+            background: var(--card-bg); border-radius: var(--border-radius);
+            padding: 20px; box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e5e1; text-align: center;
         }
         .card-destaque {
             border-left: 5px solid var(--primary-green);
-            grid-column: 1 / -1; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center;
         }
-        .card h3 {
-            color: var(--primary-green);
-            margin-top: 0;
-            font-size: 1.2rem;
-        }
-        .data-point {
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: var(--accent-terra);
-            margin: 10px 0;
-        }
-        .etc-point {
-            font-size: 4rem;
-            color: var(--primary-green);
-            margin: 0;
-        }
+        .card h3 { color: var(--primary-green); margin-top: 0; font-size: 1.2rem; }
+        .data-point { font-size: 2.2rem; font-weight: bold; color: var(--accent-terra); margin: 10px 0; }
+        .etc-point { font-size: 4rem; color: var(--primary-green); margin: 0; }
         
-        /* Estilo do Menu de Cultura */
         .seletor-cultura {
-            margin: 15px 0;
-            background: var(--bg-color);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px dashed var(--primary-green);
-            width: 100%;
-            max-width: 400px;
+            margin: 15px 0; background: var(--bg-color); padding: 15px;
+            border-radius: 12px; border: 1px dashed var(--primary-green);
+            width: 100%; max-width: 400px;
         }
-        .seletor-cultura label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-color);
-        }
+        .seletor-cultura label { font-weight: bold; display: block; margin-bottom: 8px; }
         select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--primary-green);
-            font-size: 1.1rem;
-            background-color: white;
-            color: var(--text-color);
-            cursor: pointer;
+            width: 100%; padding: 10px; border-radius: 8px;
+            border: 1px solid var(--primary-green); font-size: 1.1rem; cursor: pointer;
         }
         
-        .eto-info {
-            font-size: 0.9rem;
-            color: #777;
-            margin-top: 10px;
+        .bomba-box {
+            background: #e9f5ec; padding: 15px; border-radius: 12px; 
+            margin: 15px 0; border: 1px solid var(--primary-green); width: 100%; max-width: 400px;
         }
+        .bomba-titulo { color: var(--primary-green); font-weight: bold; font-size: 1.1rem; }
+        .bomba-tempo { font-size: 2rem; font-weight: bold; color: var(--text-color); margin: 5px 0; }
+        .bomba-nota { font-size: 0.8rem; color: #555; }
 
+        .eto-info { font-size: 0.9rem; color: #777; margin-top: 10px; }
         #loading { text-align: center; font-size: 1.2rem; margin: 20px; }
-        footer {
-            margin-top: 40px;
-            padding: 20px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #777;
-        }
+        footer { margin-top: 40px; padding: 20px; text-align: center; font-size: 0.9rem; color: #777; }
     </style>
 </head>
 <body>
@@ -159,7 +102,6 @@
     <h1>🌿 Estação Pleno Campo SBCG (Campo Grande)</h1>
     <p>Monitoramento e Cálculo de Evapotranspiração da Cultura (ETc)</p>
     
-    <!-- Novo Menu de Navegação -->
     <nav>
         <ul class="nav-menu">
             <li><a href="index.html" class="active">Início</a></li>
@@ -173,9 +115,8 @@
     <div id="loading">Sincronizando com a natureza...</div>
     
     <div id="dashboard" style="display: none;">
-        <!-- Card de ETc em Destaque -->
         <div class="card card-destaque">
-            <h3>Evapotranspiração da Cultura (ETc)</h3>
+            <h3>Evapotranspiração Diária da Cultura (ETc)</h3>
             
             <div class="seletor-cultura">
                 <label for="crop-select">Selecione o cultivo (Fase Intermediária):</label>
@@ -190,29 +131,33 @@
             </div>
 
             <div class="data-point etc-point" id="etc-val">-- mm/dia</div>
-            <p>Quantidade de água que a planta está consumindo hoje.</p>
-            <div class="eto-info">ET₀ de referência calculada (Hansen): <span id="eto-base">--</span> mm/dia</div>
+            <p>Demanda hídrica total consolidada para o dia de hoje.</p>
+
+            <!-- Novo Box de Tempo de Bomba -->
+            <div class="bomba-box">
+                <div class="bomba-titulo">⏱️ Tempo de Irrigação (Gotejamento)</div>
+                <div class="bomba-tempo" id="tempo-irrigacao">--h --min</div>
+                <div class="bomba-nota">*Baseado em taxa de 5 mm/h e eficiência de 90%.</div>
+            </div>
+
+            <div class="eto-info">ET₀ diária calculada (Hansen): <span id="eto-base">--</span> mm/dia</div>
         </div>
 
-        <!-- Grid de Variáveis Meteorológicas -->
         <div class="dashboard-grid">
             <div class="card">
-                <h3>Temperatura</h3>
+                <h3>Temperatura Atual</h3>
                 <div class="data-point" id="temp-val">-- °C</div>
             </div>
-            
             <div class="card">
-                <h3>Umidade</h3>
+                <h3>Umidade Atual</h3>
                 <div class="data-point" id="umidade-val">-- %</div>
             </div>
-            
             <div class="card">
-                <h3>Pressão</h3>
+                <h3>Pressão Atual</h3>
                 <div class="data-point" id="pressao-val">-- hPa</div>
             </div>
-            
             <div class="card">
-                <h3>Vento</h3>
+                <h3>Vento Atual</h3>
                 <div class="data-point" id="vento-val">-- km/h</div>
             </div>
         </div>
@@ -220,35 +165,32 @@
 </div>
 
 <footer>
-    Dados: Open-Meteo API. 
-    © 2026 PlenoCampo. Feito no Brasil.
+    Dados: Open-Meteo API. © 2026 PlenoCampo. Feito no Brasil.
 </footer>
 
 <script>
     const lat = -20.4687;
     const lon = -54.6725;
     const elevacao = 532; 
-
-    // Variável global para armazenar a ETo calculada e não precisar refazer a requisição
     let etoGlobal = 0; 
 
     async function fetchWeatherData() {
         try {
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m,shortwave_radiation&timezone=America%2FSao_Paulo`;
+            // Agora puxamos o "current" (para os cards de baixo) e o "daily" (para a ETc) na mesma requisição
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m&daily=temperature_2m_mean,shortwave_radiation_sum&forecast_days=1&timezone=America%2FSao_Paulo`;
             
             const response = await fetch(url);
             const data = await response.json();
             
-            processWeatherData(data.current);
+            processWeatherData(data);
         } catch (error) {
             console.error("Erro ao buscar dados: ", error);
             document.getElementById('loading').innerText = "Falha ao conectar com a estação.";
         }
     }
 
-    function calcularHansen(temperatura, radiacaoW, elevacao) {
-        // Conversão de W/m² para MJ/m²/dia
-        const radiacaoMJ = (radiacaoW * 3600 * 24) / 1000000;
+    function calcularHansenDiario(temperatura, radiacaoMJ, elevacao) {
+        if (!radiacaoMJ || radiacaoMJ <= 0) return 0.00;
         const lambda = 2.501 - (0.002361 * temperatura);
         const P = 101.3 * Math.pow(((293 - 0.0065 * elevacao) / 293), 5.26);
         const gamma = 0.00163 * (P / lambda);
@@ -259,39 +201,43 @@
         return eto > 0 ? parseFloat(eto.toFixed(2)) : 0.00;
     }
 
-    function processWeatherData(currentData) {
-        const temp = currentData.temperature_2m;
-        const umidade = currentData.relative_humidity_2m;
-        const pressao = currentData.surface_pressure;
-        const vento = currentData.wind_speed_10m;
-        const radiacao = currentData.shortwave_radiation;
-
-        // Calcula a ETo base e salva globalmente
-        etoGlobal = calcularHansen(temp, radiacao, elevacao);
+    function processWeatherData(data) {
+        // Dados instantâneos para os cards menores
+        document.getElementById('temp-val').innerText = data.current.temperature_2m + " °C";
+        document.getElementById('umidade-val').innerText = data.current.relative_humidity_2m + " %";
+        document.getElementById('pressao-val').innerText = data.current.surface_pressure + " hPa";
+        document.getElementById('vento-val').innerText = data.current.wind_speed_10m + " km/h";
         
-        // Atualiza a Interface Meteorológica
+        // Dados diários consolidados para a fórmula
+        const tempMedia = data.daily.temperature_2m_mean[0];
+        const radTotal = data.daily.shortwave_radiation_sum[0];
+
+        etoGlobal = calcularHansenDiario(tempMedia, radTotal, elevacao);
+        
         document.getElementById('loading').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        
-        document.getElementById('temp-val').innerText = temp + " °C";
-        document.getElementById('umidade-val').innerText = umidade + " %";
-        document.getElementById('pressao-val').innerText = pressao + " hPa";
-        document.getElementById('vento-val').innerText = vento + " km/h";
-        
         document.getElementById('eto-base').innerText = etoGlobal;
 
-        // Dispara o cálculo final com a cultura selecionada (Soja por padrão)
         atualizarETc();
     }
 
-    // Função engatilhada pelo seletor de cultura (onchange)
     function atualizarETc() {
         const kc = parseFloat(document.getElementById('crop-select').value);
-        
-        // ETc = ETo * Kc
         const etc = (etoGlobal * kc).toFixed(2);
-        
         document.getElementById('etc-val').innerText = etc + " mm/dia";
+        
+        // Parâmetros do gotejamento
+        const taxaAplicacao = 5.0; // mm/h
+        const eficiencia = 0.90;   // 90%
+        
+        // Cálculo do tempo: Horas decimais
+        const horasDecimais = etc / (taxaAplicacao * eficiencia);
+        
+        // Conversão para Horas e Minutos
+        const horas = Math.floor(horasDecimais);
+        const minutos = Math.round((horasDecimais - horas) * 60);
+        
+        document.getElementById('tempo-irrigacao').innerText = `${horas}h ${minutos}min`;
     }
 
     fetchWeatherData();
