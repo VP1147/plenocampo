@@ -57,7 +57,10 @@
         }
         .card-destaque {
             border-left: 5px solid var(--primary-green);
-            grid-column: 1 / -1; /* Ocupa toda a largura */
+            grid-column: 1 / -1; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .card h3 {
             color: var(--primary-green);
@@ -70,10 +73,45 @@
             color: var(--accent-terra);
             margin: 10px 0;
         }
-        .eto-point {
-            font-size: 3.5rem;
+        .etc-point {
+            font-size: 4rem;
             color: var(--primary-green);
+            margin: 0;
         }
+        
+        /* Estilo do Menu de Cultura */
+        .seletor-cultura {
+            margin: 15px 0;
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed var(--primary-green);
+            width: 100%;
+            max-width: 400px;
+        }
+        .seletor-cultura label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-green);
+            font-size: 1.1rem;
+            background-color: white;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        
+        .eto-info {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 10px;
+        }
+
         #loading { text-align: center; font-size: 1.2rem; margin: 20px; }
         footer {
             margin-top: 40px;
@@ -88,18 +126,32 @@
 
 <header>
     <h1>🌿 Estação SolarPunk | SBCG (Campo Grande)</h1>
-    <p>Monitoramento em Tempo Real</p>
+    <p>Monitoramento e Cálculo de Evapotranspiração da Cultura (ETc)</p>
 </header>
 
 <div class="container">
     <div id="loading">Sincronizando com a natureza...</div>
     
     <div id="dashboard" style="display: none;">
-        <!-- Card de ET0 em Destaque -->
+        <!-- Card de ETc em Destaque -->
         <div class="card card-destaque">
-            <h3>Evapotranspiração de Referência (ET₀) - Método de Hansen</h3>
-            <div class="data-point eto-point" id="eto-val">-- mm/dia</div>
-            <p>Calculado com base na temperatura e radiação solar atuais do aeroporto de Campo Grande.</p>
+            <h3>Evapotranspiração da Cultura (ETc)</h3>
+            
+            <div class="seletor-cultura">
+                <label for="crop-select">Selecione o cultivo (Fase Intermediária):</label>
+                <select id="crop-select" onchange="atualizarETc()">
+                    <option value="1.00">Grama Padrão / Solo Nu (Kc = 1.00)</option>
+                    <option value="1.15" selected>Soja (Kc = 1.15)</option>
+                    <option value="1.20">Milho (Kc = 1.20)</option>
+                    <option value="1.05">Feijão (Kc = 1.05)</option>
+                    <option value="0.90">Trigo (Kc = 0.90)</option>
+                    <option value="1.10">Cana-de-açúcar (Kc = 1.10)</option>
+                </select>
+            </div>
+
+            <div class="data-point etc-point" id="etc-val">-- mm/dia</div>
+            <p>Quantidade de água que a planta está consumindo hoje.</p>
+            <div class="eto-info">ET₀ de referência calculada (Hansen): <span id="eto-base">--</span> mm/dia</div>
         </div>
 
         <!-- Grid de Variáveis Meteorológicas -->
@@ -128,22 +180,19 @@
 </div>
 
 <footer>
-    Dados coletados de estação equivalente a SBCG. Pronto para rodar no GitHub Pages!
+    Dados coletados de estação equivalente a SBCG (Open-Meteo API). Pronto para GitHub Pages!
 </footer>
 
 <script>
-    // Coordenadas exatas do Aeroporto de Campo Grande (SBCG)
     const lat = -20.4687;
     const lon = -54.6725;
-    const elevacao = 532; // metros
+    const elevacao = 532; 
+
+    // Variável global para armazenar a ETo calculada e não precisar refazer a requisição
+    let etoGlobal = 0; 
 
     async function fetchWeatherData() {
         try {
-            /* 
-             SE VOCÊ CONSEGUIR UMA API KEY DO WUNDERGROUND NO FUTURO:
-             Troque a URL abaixo por:
-             const url = `https://api.weather.com/v2/pws/observations/current?stationId=IYOURSTATION&format=json&units=m&apiKey=SUA_CHAVE`;
-            */
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m,shortwave_radiation&timezone=America%2FSao_Paulo`;
             
             const response = await fetch(url);
@@ -157,27 +206,16 @@
     }
 
     function calcularHansen(temperatura, radiacaoW, elevacao) {
-        // Conversão de W/m² (instantâneo) para MJ/m²/dia para o cálculo diário
+        // Conversão de W/m² para MJ/m²/dia
         const radiacaoMJ = (radiacaoW * 3600 * 24) / 1000000;
-
-        // 1. Calor latente de vaporização (λ) em MJ/kg
         const lambda = 2.501 - (0.002361 * temperatura);
-        
-        // 2. Pressão atmosférica (P) em kPa baseada na elevação
         const P = 101.3 * Math.pow(((293 - 0.0065 * elevacao) / 293), 5.26);
-        
-        // 3. Constante psicrométrica (γ)
         const gamma = 0.00163 * (P / lambda);
-        
-        // 4. Declividade da curva de pressão de vapor (Δ)
         const expTerm = Math.exp((17.27 * temperatura) / (temperatura + 237.3));
         const delta = (4098 * 0.6108 * expTerm) / Math.pow((temperatura + 237.3), 2);
         
-        // 5. Equação de Hansen (1984)
-        const eto = 0.7 * (delta / (delta + gamma)) * (radiacaoMJ / lambda);
-        
-        // Previne valores negativos à noite (quando radiação é 0)
-        return eto > 0 ? eto.toFixed(2) : "0.00";
+        let eto = 0.7 * (delta / (delta + gamma)) * (radiacaoMJ / lambda);
+        return eto > 0 ? parseFloat(eto.toFixed(2)) : 0.00;
     }
 
     function processWeatherData(currentData) {
@@ -187,10 +225,10 @@
         const vento = currentData.wind_speed_10m;
         const radiacao = currentData.shortwave_radiation;
 
-        // Calcula a Evapotranspiração de Referência
-        const eto = calcularHansen(temp, radiacao, elevacao);
+        // Calcula a ETo base e salva globalmente
+        etoGlobal = calcularHansen(temp, radiacao, elevacao);
         
-        // Atualiza a Interface
+        // Atualiza a Interface Meteorológica
         document.getElementById('loading').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         
@@ -198,10 +236,23 @@
         document.getElementById('umidade-val').innerText = umidade + " %";
         document.getElementById('pressao-val').innerText = pressao + " hPa";
         document.getElementById('vento-val').innerText = vento + " km/h";
-        document.getElementById('eto-val').innerText = eto + " mm/dia";
+        
+        document.getElementById('eto-base').innerText = etoGlobal;
+
+        // Dispara o cálculo final com a cultura selecionada (Soja por padrão)
+        atualizarETc();
     }
 
-    // Chama a função assim que a página carrega
+    // Função engatilhada pelo seletor de cultura (onchange)
+    function atualizarETc() {
+        const kc = parseFloat(document.getElementById('crop-select').value);
+        
+        // ETc = ETo * Kc
+        const etc = (etoGlobal * kc).toFixed(2);
+        
+        document.getElementById('etc-val').innerText = etc + " mm/dia";
+    }
+
     fetchWeatherData();
 </script>
 </body>
