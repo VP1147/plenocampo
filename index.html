@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estação SolarPunk - SBCG</title>
+    <style>
+        :root {
+            --bg-color: #fcf9f2;
+            --text-color: #2c3e2d;
+            --primary-green: #4a7c59;
+            --accent-sun: #e9c46a;
+            --accent-terra: #f4a261;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            background-color: var(--primary-green);
+            color: white;
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--accent-sun);
+        }
+        h1 { margin: 0; font-size: 2rem; }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e5e1;
+            text-align: center;
+        }
+        .card-destaque {
+            border-left: 5px solid var(--primary-green);
+            grid-column: 1 / -1; /* Ocupa toda a largura */
+        }
+        .card h3 {
+            color: var(--primary-green);
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        .data-point {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--accent-terra);
+            margin: 10px 0;
+        }
+        .eto-point {
+            font-size: 3.5rem;
+            color: var(--primary-green);
+        }
+        #loading { text-align: center; font-size: 1.2rem; margin: 20px; }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🌿 Estação SolarPunk | SBCG (Campo Grande)</h1>
+    <p>Monitoramento em Tempo Real</p>
+</header>
+
+<div class="container">
+    <div id="loading">Sincronizando com a natureza...</div>
+    
+    <div id="dashboard" style="display: none;">
+        <!-- Card de ET0 em Destaque -->
+        <div class="card card-destaque">
+            <h3>Evapotranspiração de Referência (ET₀) - Método de Hansen</h3>
+            <div class="data-point eto-point" id="eto-val">-- mm/dia</div>
+            <p>Calculado com base na temperatura e radiação solar atuais do aeroporto de Campo Grande.</p>
+        </div>
+
+        <!-- Grid de Variáveis Meteorológicas -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Temperatura</h3>
+                <div class="data-point" id="temp-val">-- °C</div>
+            </div>
+            
+            <div class="card">
+                <h3>Umidade</h3>
+                <div class="data-point" id="umidade-val">-- %</div>
+            </div>
+            
+            <div class="card">
+                <h3>Pressão</h3>
+                <div class="data-point" id="pressao-val">-- hPa</div>
+            </div>
+            
+            <div class="card">
+                <h3>Vento</h3>
+                <div class="data-point" id="vento-val">-- km/h</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    Dados coletados de estação equivalente a SBCG. Pronto para rodar no GitHub Pages!
+</footer>
+
+<script>
+    // Coordenadas exatas do Aeroporto de Campo Grande (SBCG)
+    const lat = -20.4687;
+    const lon = -54.6725;
+    const elevacao = 532; // metros
+
+    async function fetchWeatherData() {
+        try {
+            /* 
+             SE VOCÊ CONSEGUIR UMA API KEY DO WUNDERGROUND NO FUTURO:
+             Troque a URL abaixo por:
+             const url = `https://api.weather.com/v2/pws/observations/current?stationId=IYOURSTATION&format=json&units=m&apiKey=SUA_CHAVE`;
+            */
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m,shortwave_radiation&timezone=America%2FSao_Paulo`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            processWeatherData(data.current);
+        } catch (error) {
+            console.error("Erro ao buscar dados: ", error);
+            document.getElementById('loading').innerText = "Falha ao conectar com a estação.";
+        }
+    }
+
+    function calcularHansen(temperatura, radiacaoW, elevacao) {
+        // Conversão de W/m² (instantâneo) para MJ/m²/dia para o cálculo diário
+        const radiacaoMJ = (radiacaoW * 3600 * 24) / 1000000;
+
+        // 1. Calor latente de vaporização (λ) em MJ/kg
+        const lambda = 2.501 - (0.002361 * temperatura);
+        
+        // 2. Pressão atmosférica (P) em kPa baseada na elevação
+        const P = 101.3 * Math.pow(((293 - 0.0065 * elevacao) / 293), 5.26);
+        
+        // 3. Constante psicrométrica (γ)
+        const gamma = 0.00163 * (P / lambda);
+        
+        // 4. Declividade da curva de pressão de vapor (Δ)
+        const expTerm = Math.exp((17.27 * temperatura) / (temperatura + 237.3));
+        const delta = (4098 * 0.6108 * expTerm) / Math.pow((temperatura + 237.3), 2);
+        
+        // 5. Equação de Hansen (1984)
+        const eto = 0.7 * (delta / (delta + gamma)) * (radiacaoMJ / lambda);
+        
+        // Previne valores negativos à noite (quando radiação é 0)
+        return eto > 0 ? eto.toFixed(2) : "0.00";
+    }
+
+    function processWeatherData(currentData) {
+        const temp = currentData.temperature_2m;
+        const umidade = currentData.relative_humidity_2m;
+        const pressao = currentData.surface_pressure;
+        const vento = currentData.wind_speed_10m;
+        const radiacao = currentData.shortwave_radiation;
+
+        // Calcula a Evapotranspiração de Referência
+        const eto = calcularHansen(temp, radiacao, elevacao);
+        
+        // Atualiza a Interface
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        
+        document.getElementById('temp-val').innerText = temp + " °C";
+        document.getElementById('umidade-val').innerText = umidade + " %";
+        document.getElementById('pressao-val').innerText = pressao + " hPa";
+        document.getElementById('vento-val').innerText = vento + " km/h";
+        document.getElementById('eto-val').innerText = eto + " mm/dia";
+    }
+
+    // Chama a função assim que a página carrega
+    fetchWeatherData();
+</script>
+</body>
+</html>
